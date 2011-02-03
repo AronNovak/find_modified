@@ -37,6 +37,9 @@ function find_modified_drush_command() {
   return $items;
 }
 
+/**
+ * Iterates through on the specified or the current directory and searches for modified files
+ */
 function find_modified_find() {
   $args = func_get_args();
   $path = isset($args[0]) ? $args[0] : drush_cwd();
@@ -59,6 +62,9 @@ function find_modified_find() {
   }
 }
 
+/**
+ * Show the diff for a specific file
+ */
 function find_modified_diff() {
   $args = func_get_args();
   $object = new SplFileInfo($args[0]);
@@ -68,6 +74,9 @@ function find_modified_diff() {
 
   if (!empty($rev) && !empty($cvs_proj)) {
     find_modified_is_diff($object, $rev, $cvs_proj, TRUE);
+  }
+  else {
+    return drush_set_error(dt("Failed to detect revision or CVS project for !file", array('!file' => $args[0]))); 
   }
 }
 
