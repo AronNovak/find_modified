@@ -76,7 +76,7 @@ function find_modified_diff() {
     find_modified_is_diff($object, $rev, $cvs_proj, TRUE);
   }
   else {
-    return drush_set_error(dt("Failed to detect revision or CVS project for !file", array('!file' => $args[0]))); 
+    return drush_set_error(dt("Failed to detect revision or CVS project for !file", array('!file' => $args[0])));
   }
 }
 
@@ -108,7 +108,7 @@ function find_modified_get_cvs_proj($path) {
 
 function find_modified_get_cvs_rev($real) {
   // Attempt to determine CVS revision
-  drush_shell_exec("cat " . $real .  " | grep // | head -n1 | cut -d \" \" -f 4");
+  drush_shell_exec("cat " . escapeshellarg($real) .  " | grep // | head -n1 | cut -d \" \" -f 4");
   $rev = trim(array_shift(drush_shell_exec_output()));
   // "syntax check" on revision number
   $parts = explode(".", $rev);
@@ -135,7 +135,7 @@ function find_modified_is_diff($file, $rev, $cvs_proj, $show = FALSE) {
   foreach ($objects as $f) {
     if ($file->getFilename() == $f->getFilename()) {
       // diff -bB means ignoring whitespace or empty line changes
-      drush_shell_exec("diff -bB " . $f->getRealPath() . " " . $file->getRealPath());
+      drush_shell_exec("diff -bB " . escapeshellarg($f->getRealPath()) . " " . escapeshellarg($file->getRealPath()));
       $diff = drush_shell_exec_output();
       if (!empty($diff)) {
         if ($show) {
